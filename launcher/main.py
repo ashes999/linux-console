@@ -8,10 +8,10 @@
 import pyglet
 
 def process_input(key):
-    print(key)
+    pass
 
 def on_key_release(symbol, modifiers):
-    print(symbol)
+    process_input(symbol)
 
 def on_mouse_release(x, y, button, modifiers):
     process_input(button)
