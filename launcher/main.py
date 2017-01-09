@@ -18,17 +18,25 @@ def on_mouse_release(x, y, button, modifiers):
 
 SCREEN_WIDTH = 1920
 SCREEN_HEIGHT = 1080
+OPTIONS = ["Dajjal's Minions", "Shutdown", "OS"]
 
 window = pyglet.window.Window(SCREEN_WIDTH, SCREEN_HEIGHT, fullscreen=True)
 window.push_handlers(on_mouse_release, on_key_release) # TODO: joypad
 
-label = pyglet.text.Label('Hello, world!')
-label.y = SCREEN_HEIGHT / 2
-label.x = SCREEN_WIDTH / 2
+labels = []
+i = 0
+
+for option in OPTIONS:
+    i += 1
+    label = pyglet.text.Label(option)
+    label.x = 150
+    label.y = SCREEN_HEIGHT - 250 - (32 * i)
+    labels.append(label)
 
 @window.event
 def on_draw():
     window.clear()
-    label.draw()
+    for label in labels:
+        label.draw()
 
 pyglet.app.run()
