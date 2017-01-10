@@ -2,14 +2,14 @@
 # Cheap and fast Pyglet launcher. Will Pyglet work with controllers?
 ###
 
-# TODO: run full-screen
-# TODO: scale and black bands
+import os
 
 import pyglet
 
 def process_input(key):
     # TODO: process input, for reals
     key = selected_label.text
+    key = "Shutdown"
     execute = OPTIONS[key]
     execute()
 
@@ -23,17 +23,10 @@ def on_mouse_release(x, y, button, modifiers):
     process_input(button)
 
 def shutdown():
-    # http://stackoverflow.com/questions/23013274/shutting-down-computer-linux-using-python#23013969
-    import dbus
-    sys_bus = dbus.SystemBus()
-    ck_srv = sys_bus.get_object('org.freedesktop.ConsoleKit',
-                                    '/org/freedesktop/ConsoleKit/Manager')
-    ck_iface = dbus.Interface(ck_srv, 'org.freedesktop.ConsoleKit.Manager')
-    stop_method = ck_iface.get_dbus_method("Stop")
-    stop_method()
+    os.system("shutdown -P 0")
 
-SCREEN_WIDTH = 1920
-SCREEN_HEIGHT = 1080
+SCREEN_WIDTH = 1024
+SCREEN_HEIGHT = 576
 
 OPTIONS = {
     "Dajjal's Minions": lambda: print("DM!"),
