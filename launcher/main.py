@@ -26,10 +26,9 @@ class Launcher:
         self.window.push_handlers(self.on_mouse_release, self.on_key_release)
 
         self.labels = []
-        i = 0
 
-        for option in Launcher.OPTIONS:
-            i += 1
+        for i in range(len(Launcher.OPTIONS)):
+            option = Launcher.OPTIONS[i]
             label = pyglet.text.Label(option[0])
             label.x = 150
             label.y = Launcher.SCREEN_HEIGHT - 250 - (32 * i)
@@ -41,14 +40,14 @@ class Launcher:
         @self.window.event
         def on_draw():
             self.window.clear()
-            i = 0
-            for label in self.labels:        
+            for i in range(len(self.labels)):
+                label = self.labels[i]
                 if self.selected_index == i:
                     label.color = Launcher.SELECTED_COLOUR
                 else:
                     label.color = Launcher.UNSELECTED_COLOUR
                 label.draw()
-                i += 1
+
     def execute_selected_option(self):
         # TODO: process input, for reals
         option = Launcher.OPTIONS[self.selected_index]
@@ -76,7 +75,7 @@ class Launcher:
 
     def on_mouse_release(self, x, y, button, modifiers):
         # Execute the clicked-on option
-        print(x, y, button)
+        pass
 
     # Buttons only, doesn't include D-pad
     def on_joybutton_release(self, joystick, button):
