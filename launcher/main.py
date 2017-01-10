@@ -13,7 +13,7 @@ class Launcher:
 
     OPTIONS = [
         ("Dajjal's Minions", lambda: print("DM!")),
-        ("Shutdown", lambda: shutdown()),
+        ("Shutdown", lambda: os.system("shutdown -P 0")),
         ("OS", lambda: pyglet.app.exit())
     ]
 
@@ -37,9 +37,6 @@ class Launcher:
 
         self.selected_index = 0
         self.joysticks = []
-
-        def shutdown():
-            os.system("shutdown -P 0")
 
         @self.window.event
         def on_draw():
