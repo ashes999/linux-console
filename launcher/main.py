@@ -5,77 +5,110 @@
 import os
 
 import pyglet
+from pyglet.window import key, mouse
 
-def execute_selected_option():
-    # TODO: process input, for reals
-    op = selected_label.text
-    execute = OPTIONS[op]
-    execute()
+class Launcher:
+    SCREEN_WIDTH = 1024
+    SCREEN_HEIGHT = 576
 
-def on_key_release(symbol, modifiers):
-    # Use up-down arrows to browse and space/enter to launch
-    # Use analog or d-pad to move, press a button to launch
-    print(symbol)
+    OPTIONS = [
+        ("Dajjal's Minions", lambda: print("DM!")),
+        ("Shutdown", lambda: shutdown()),
+        ("OS", lambda: pyglet.app.exit())
+    ]
 
-def on_mouse_release(x, y, button, modifiers):
-    # Execute the clicked-on option
-    print(x, y, button)
+    # RGBA
+    SELECTED_COLOUR = (255, 0, 0, 255) # red
+    UNSELECTED_COLOUR = (255, 255, 255, 255) # white
 
-# Buttons only, doesn't include D-pad
-def on_joybutton_release(joystick, button):
-    print("{0} => {1}".format(joystick, button))
+    def __init__(self):
+        self.window = pyglet.window.Window(Launcher.SCREEN_WIDTH, Launcher.SCREEN_HEIGHT, fullscreen=False)
+        self.window.push_handlers(self.on_mouse_release, self.on_key_release)
 
-def on_joyaxis_motion(joystick, axis, value):
-    # Crude dead-zones. Tested on Logitech F310
-    if abs(value) < 0.01:
-        value = 0
-    print("Joystick D-Pad: {0} => {1}".format(axis, value))
+        self.labels = []
+        i = 0
 
-def shutdown():
-    os.system("shutdown -P 0")
+        for option in Launcher.OPTIONS:
+            i += 1
+            label = pyglet.text.Label(option[0])
+            label.x = 150
+            label.y = Launcher.SCREEN_HEIGHT - 250 - (32 * i)
+            self.labels.append(label)
 
-SCREEN_WIDTH = 1024
-SCREEN_HEIGHT = 576
+        self.selected_index = 0
+        self.joysticks = []
 
-OPTIONS = {
-    "Dajjal's Minions": lambda: print("DM!"),
-    "Shutdown": lambda: shutdown(),
-    "OS": lambda: pyglet.app.exit()
-}
+        def shutdown():
+            os.system("shutdown -P 0")
 
-window = pyglet.window.Window(SCREEN_WIDTH, SCREEN_HEIGHT, fullscreen=False)
-window.push_handlers(on_mouse_release, on_key_release)
+        @self.window.event
+        def on_draw():
+            self.window.clear()
+            i = 0
+            for label in self.labels:        
+                if self.selected_index == i:
+                    label.color = Launcher.SELECTED_COLOUR
+                else:
+                    label.color = Launcher.UNSELECTED_COLOUR
+                label.draw()
+                i += 1
+    def execute_selected_option(self):
+        # TODO: process input, for reals
+        option = Launcher.OPTIONS[self.selected_index]
+        execute = option[1]
+        print("Executing {0}".format(option[0]))
+        execute()
 
-labels = []
-i = 0
+    def select_previous_option(self):
+        self.selected_index -= 1
+        if self.selected_index < 0:
+            self.selected_index = len(Launcher.OPTIONS) - 1
 
-for option in OPTIONS:
-    i += 1
-    label = pyglet.text.Label(option)
-    label.x = 150
-    label.y = SCREEN_HEIGHT - 250 - (32 * i)
-    labels.append(label)
+    def select_next_option(self):
+        self.selected_index += 1
+        if self.selected_index >= len(Launcher.OPTIONS):
+            self.selected_index = 0
 
-selected_label = labels[0]
+    def on_key_release(self, symbol, modifiers):
+        # Use up-down arrows to browse and space/enter to launch
+        # Use analog or d-pad to move, press a button to launch
+        if symbol == key.UP:
+            self.select_previous_option()
+        elif symbol == key.DOWN:
+            self.select_next_option()
 
-joysticks = []
+    def on_mouse_release(self, x, y, button, modifiers):
+        # Execute the clicked-on option
+        print(x, y, button)
 
-@window.event
-def on_draw():
-    window.clear()
-    for label in labels:
-        label.draw()
+    # Buttons only, doesn't include D-pad
+    def on_joybutton_release(self, joystick, button):
+        print("{0} => {1}".format(joystick, button))
 
-def open_joysticks(elapsed):
-    current_joysticks = pyglet.input.get_joysticks()
-    if current_joysticks and len(current_joysticks) != len(joysticks):
-        print("Joystick change")
-        joysticks.clear()
-        for j in current_joysticks:
-            j.open()
-            j.push_handlers(on_joybutton_release, on_joyaxis_motion)
-            joysticks.append(j)
+    # Thumbstick and D-pad
+    def on_joyaxis_motion(self, joystick, axis, value):
+        # Crude dead-zones. Tested on Logitech F310
+        if abs(value) < 0.01:
+            value = 0
+        if axis == "y" and abs(value) == 1:
+            if value == -1:
+                self.select_previous_option()
+            elif value == 1:
+                self.select_next_option()
 
-pyglet.clock.schedule_interval(open_joysticks, 1)
-open_joysticks(0)
-pyglet.app.run()
+    def open_joysticks(self, elapsed):
+        current_joysticks = pyglet.input.get_joysticks()
+        if current_joysticks and len(current_joysticks) != len(self.joysticks):
+            print("Joystick change")
+            self.joysticks.clear()
+            for j in current_joysticks:
+                j.open()
+                j.push_handlers(self.on_joybutton_release, self.on_joyaxis_motion)
+                self.joysticks.append(j)
+
+    def run(self):
+        pyglet.clock.schedule_interval(self.open_joysticks, 1)
+        self.open_joysticks(0)
+        pyglet.app.run()
+
+Launcher().run()
