@@ -1,0 +1,12 @@
+{
+    "games": [
+        {
+            "name": "Dajjal's Minions",
+            "path": "",
+            "execute": {
+                "windows": "dajjals-minions.exe",
+                "linux": "dajjals_minions"   
+            }
+        }
+    ]
+}

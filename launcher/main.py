@@ -1,8 +1,10 @@
 ###
-# Cheap and fast Pyglet launcher. Will Pyglet work with controllers?
+# Cheap and fast Pyglet launcher. Works with controllers.
 ###
 
+import json
 import os
+import sys
 
 import pyglet
 from pyglet.window import key, mouse
@@ -10,18 +12,25 @@ from pyglet.window import key, mouse
 class Launcher:
     SCREEN_WIDTH = 1024
     SCREEN_HEIGHT = 576
+    CONFIG_FILE = "config.json"
+    GAMES_PATH = "../games"
+    PLATFORM = "linux"
 
-    OPTIONS = [
-        ("Dajjal's Minions", lambda: print("DM!")),
-        ("Shutdown", lambda: os.system("shutdown -P 0")),
-        ("OS", lambda: pyglet.app.exit())
-    ]
+    OPTIONS = []
 
     # RGBA
     SELECTED_COLOUR = (255, 0, 0, 255) # red
     UNSELECTED_COLOUR = (255, 255, 255, 255) # white
 
     def __init__(self):
+        if sys.platform == "win32":
+            Launcher.PLATFORM = "windows"
+
+        self.load_games()
+        Launcher.OPTIONS.append(("Shutdown", lambda: os.system("shutdown -P 0")))
+        Launcher.OPTIONS.append(("OS", lambda: pyglet.app.exit()))
+        print(Launcher.OPTIONS)
+
         self.window = pyglet.window.Window(Launcher.SCREEN_WIDTH, Launcher.SCREEN_HEIGHT, fullscreen=False)
         self.window.push_handlers(self.on_mouse_release, self.on_key_release)
 
@@ -108,6 +117,30 @@ class Launcher:
                 j.open()
                 j.push_handlers(self.on_joybutton_release, self.on_joyaxis_motion)
                 self.joysticks.append(j)
+
+    def load_games(self):
+        with open(Launcher.CONFIG_FILE) as f:
+            raw_json = f.read()
+
+        json_object = json.loads(raw_json)
+        games = json_object["games"]
+
+        for game in games:
+            name = game["name"]
+
+            path = Launcher.GAMES_PATH
+            if "path" in game and len(game["path"]) > 0:
+                path = "{0}/{1}".format(path, game["path"])
+
+            execute_cmd = game["execute"][Launcher.PLATFORM]
+            print(execute_cmd)
+            fn = lambda: self.launch_game(name, path, execute_cmd)
+            t = (name, fn)
+            Launcher.OPTIONS.append(t)
+
+    def launch_game(self, name, path, execute_cmd):
+        os.chdir(path)
+        os.system(execute_cmd)
 
     def run(self):
         pyglet.clock.schedule_interval(self.open_joysticks, 1)
