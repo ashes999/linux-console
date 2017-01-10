@@ -30,8 +30,9 @@ class Launcher:
         for i in range(len(Launcher.OPTIONS)):
             option = Launcher.OPTIONS[i]
             label = pyglet.text.Label(option[0])
+            label.font_size = 48
             label.x = 150
-            label.y = Launcher.SCREEN_HEIGHT - 250 - (32 * i)
+            label.y = Launcher.SCREEN_HEIGHT - 250 - ((label.font_size * 1.5) * i)
             self.labels.append(label)
 
         self.selected_index = 0
@@ -74,8 +75,14 @@ class Launcher:
             self.select_next_option()
 
     def on_mouse_release(self, x, y, button, modifiers):
-        # Execute the clicked-on option
-        pass
+        for i in range(len(self.labels)):
+            label = self.labels[i]
+            approximate_width = len(label.text) * label.font_size
+            approximate_height = label.font_size
+            if x >= label.x and x <= label.x + approximate_width and y >= label.y and y <= label.y + approximate_height:
+                self.selected_index = i
+                self.execute_selected_option()
+                break
 
     # Buttons only, doesn't include D-pad
     def on_joybutton_release(self, joystick, button):
