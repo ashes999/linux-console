@@ -1,5 +1,5 @@
-# Linux Console
-A prototype of a low-cost Linux-based gaming console. (It's not based on Raspberry Pi.)
+# Linux Micro Console
+A prototype of a low-cost Linux-based gaming micro-console. (It's not based on Raspberry Pi.)
 
 # Hardware
 
