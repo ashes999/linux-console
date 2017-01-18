@@ -5,7 +5,7 @@
             "path": "",
             "execute": {
                 "windows": "dajjals-minions.exe",
-                "linux": "dajjals_minions"   
+                "linux": "dajjals_minions --fullscreen"
             }
         }
     ]
