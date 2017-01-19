@@ -19,7 +19,7 @@ You can use your OS of choice. For controllers, as long as you install drivers, 
 
 Officially, we only support **Ubuntu Mate** with a **Logitech F310 gamepad** (since that's what I use).
 
-# Roug Notes
+# Rough Notes
 
 `Overscan.sh`
 ```
@@ -36,9 +36,9 @@ echo 0x10001 > /sys/class/graphics/fb0/free_scale
 ```
 
 TODO: add these to ODroid C2 setup file
-- `sudo apt-get upgrade`
-- `sudo apt-get install python3-pip`
-- `sudo apt-get install git`
+- `sudo apt-get upgrade -y`
+- `sudo apt-get install python3-pip -y`
+- `sudo apt-get install git -y`
 - `mkdir ~/Desktop/Code`
 - `cd (above)`
 - `git clone ... lmc ...`
