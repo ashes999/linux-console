@@ -27,5 +27,7 @@ TODO: add these to ODroid C2 setup file
 - `cd (above)`
 - `git clone ... lmc ...`
 - ` git clone ... dm ...`
+- `sudo apt-get install python3-pip`
 - `cd dm`
-- `make, copy to lmc/games`
+- `make` (should chmod a+x build.sh, install pyinstaller and pyglet)
+- `copy to lmc/games`
