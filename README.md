@@ -18,3 +18,14 @@ For development, you may want a VGA port and a headphone jack on your device.  Y
 You can use your OS of choice. For controllers, as long as you install drivers, things should work. If they don't, or if you want to add your controller's drivers/config to the default, open a pull-request. 
 
 Officially, we only support **Ubuntu Mate** with a **Logitech F310 gamepad** (since that's what I use).
+
+# Roug Notes
+
+TODO: add these to ODroid C2 setup file
+- `sudo apt-get install git`
+- `mkdir ~/Desktop/Code`
+- `cd (above)`
+- `git clone ... lmc ...`
+- ` git clone ... dm ...`
+- `cd dm`
+- `make, copy to lmc/games`
