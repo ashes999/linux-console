@@ -36,6 +36,7 @@ echo 0x10001 > /sys/class/graphics/fb0/free_scale
 ```
 
 TODO: add these to ODroid C2 setup file
+- `sudo`
 - `sudo apt-get upgrade -y`
 - `sudo apt-get install python3-pip -y`
 - `sudo apt-get install git -y`
