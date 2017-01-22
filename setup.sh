@@ -11,7 +11,7 @@
 # # Default-Start:        2 3 4 5
 # # Default-Stop:         0 1 6
 # ### END INIT INFO
-# echo 30 20 1889 1059 >  /sys/class/graphics/fb0/window_axis
+# echo 35 20 1889 1059 >  /sys/class/graphics/fb0/window_axis
 # echo 0x10001 > /sys/class/graphics/fb0/free_scale
 # ```
 
